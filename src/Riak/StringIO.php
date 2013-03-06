@@ -4,7 +4,7 @@ namespace Riak;
 
 /**
  * Private class used to accumulate a CURL response.
- * @package Riak\StringIO
+ * @package StringIO
  */
 class StringIO {
 	function __construct() {

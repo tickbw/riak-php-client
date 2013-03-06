@@ -3,13 +3,13 @@
 namespace Riak;
 
 /**
- * The Riak\LinkPhase object holds information about a Link phase in a
+ * The LinkPhase object holds information about a Link phase in a
  * map/reduce operation.
- * @package Riak\LinkPhase
+ * @package LinkPhase
  */
 class LinkPhase {
 	/**
-	 * Construct a Riak\LinkPhase object.
+	 * Construct a LinkPhase object.
 	 * 
 	 * @param string $bucket
 	 *        	- The bucket name.
@@ -25,7 +25,7 @@ class LinkPhase {
 	}
 	
 	/**
-	 * Convert the Riak\LinkPhase to an associative array.
+	 * Convert the LinkPhase to an associative array.
 	 * Used
 	 * internally.
 	 */

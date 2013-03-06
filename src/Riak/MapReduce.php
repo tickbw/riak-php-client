@@ -3,19 +3,19 @@
 namespace Riak;
 
 /**
- * The Riak\MapReduce object allows you to build up and run a
+ * The MapReduce object allows you to build up and run a
  * map/reduce operation on Riak.
  * 
- * @package Riak\MapReduce
+ * @package MapReduce
  */
 class MapReduce {
 	
 	/**
 	 * Construct a Map/Reduce object.
 	 * 
-	 * @param RiakClient $client
-	 *        	- A RiakClient object.
-	 * @return RiakMapReduce
+	 * @param Client $client
+	 *        	- A Client object.
+	 * @return MapReduce
 	 */
 	function __construct($client) {
 		$this->client = $client;
@@ -30,20 +30,20 @@ class MapReduce {
 	 * Add inputs to a map/reduce operation.
 	 * This method takes three
 	 * different forms, depending on the provided inputs. You can
-	 * specify either a Riak\Object, a string bucket name, or a bucket,
+	 * specify either a Object, a string bucket name, or a bucket,
 	 * key, and additional arg.
 	 * 
 	 * @param mixed $arg1
-	 *        	- Riak\Object or Bucket
+	 *        	- Object or Bucket
 	 * @param mixed $arg2
 	 *        	- Key or blank
 	 * @param mixed $arg3
 	 *        	- Arg or blank
-	 * @return Riak\MapReduce
+	 * @return MapReduce
 	 */
 	function add($arg1, $arg2 = NULL, $arg3 = NULL) {
 		if (func_num_args () == 1) {
-			if ($arg1 instanceof Riak\Object)
+			if ($arg1 instanceof Object)
 				return $this->add_object ( $arg1 );
 			else
 				return $this->add_bucket ( $arg1 );
@@ -91,7 +91,7 @@ class MapReduce {
 	 * @param string $bucket
 	 *        	- The Bucket to search. @param string
 	 *        	query - The Query to execute. (Lucene syntax.) @return
-	 *        	Riak\MapReduce
+	 *        	MapReduce
 	 */
 	function search($bucket, $query) {
 		$this->inputs = array (
@@ -120,7 +120,7 @@ class MapReduce {
 	 * @return $this
 	 */
 	function link($bucket = '_', $tag = '_', $keep = FALSE) {
-		$this->phases [] = new Riak\LinkPhase ( $bucket, $tag, $keep );
+		$this->phases [] = new LinkPhase ( $bucket, $tag, $keep );
 		return $this;
 	}
 	
@@ -139,7 +139,7 @@ class MapReduce {
 	 */
 	function map($function, $options = array()) {
 		$language = is_array ( $function ) ? "erlang" : "javascript";
-		$this->phases [] = new Riak\MapReducePhase ( "map", $function, Riak\Utils::get_value ( "language", $options, $language ), Riak\Utils::get_value ( "keep", $options, FALSE ), Riak\Utils::get_value ( "arg", $options, NULL ) );
+		$this->phases [] = new MapReducePhase ( "map", $function, Utils::get_value ( "language", $options, $language ), Utils::get_value ( "keep", $options, FALSE ), Utils::get_value ( "arg", $options, NULL ) );
 		return $this;
 	}
 	
@@ -158,7 +158,7 @@ class MapReduce {
 	 */
 	function reduce($function, $options = array()) {
 		$language = is_array ( $function ) ? "erlang" : "javascript";
-		$this->phases [] = new Riak\MapReducePhase ( "reduce", $function, Riak\Utils::get_value ( "language", $options, $language ), Riak\Utils::get_value ( "keep", $options, FALSE ), Riak\Utils::get_value ( "arg", $options, NULL ) );
+		$this->phases [] = new MapReducePhase ( "reduce", $function, Utils::get_value ( "language", $options, $language ), Utils::get_value ( "keep", $options, FALSE ), Utils::get_value ( "arg", $options, NULL ) );
 		return $this;
 	}
 	
@@ -301,7 +301,7 @@ class MapReduce {
 	/**
 	 * Run the map/reduce operation.
 	 * Returns an array of results, or an
-	 * array of Riak\Link objects if the last phase is a link phase.
+	 * array of Link objects if the last phase is a link phase.
 	 * 
 	 * @param integer $timeout
 	 *        	- Timeout in seconds.
@@ -362,24 +362,24 @@ class MapReduce {
 		
 		// Do the request...
 		$url = "http://" . $this->client->host . ":" . $this->client->port . "/" . $this->client->mapred_prefix;
-		$response = Riak\Utils::httpRequest ( 'POST', $url, array (
+		$response = Utils::httpRequest ( 'POST', $url, array (
 				'Content-type: application/json' 
 		), $content );
 		$result = json_decode ( $response [1] );
 		
 		// If the last phase is NOT a link phase, then return the result.
-		$linkResultsFlag |= (end ( $this->phases ) instanceof Riak\LinkPhase);
+		$linkResultsFlag |= (end ( $this->phases ) instanceof LinkPhase);
 		
 		// If we don't need to link results, then just return.
 		if (! $linkResultsFlag)
 			return $result;
 			
 			// Otherwise, if the last phase IS a link phase, then convert the
-			// results to Riak\Link objects.
+			// results to Link objects.
 		$a = array ();
 		foreach ( $result as $r ) {
 			$tag = isset ( $r [2] ) ? $r [2] : null;
-			$link = new Riak\Link ( $r [0], $r [1], $tag );
+			$link = new Link ( $r [0], $r [1], $tag );
 			$link->client = $this->client;
 			$a [] = $link;
 		}

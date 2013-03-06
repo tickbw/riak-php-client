@@ -4,7 +4,7 @@ namespace Riak;
 
 /**
  * Utility functions used by Riak library.
- * @package RiakUtils
+ * @package Utils
  */
 class Utils {
 	
@@ -17,7 +17,7 @@ class Utils {
 	}
 	
 	/**
-	 * Given a Riak\Client, Riak\Bucket, Key, LinkSpec, and Params,
+	 * Given a Client, Bucket, Key, LinkSpec, and Params,
 	 * construct and return a URL.
 	 */
 	public static function buildRestPath($client, $bucket = NULL, $key = NULL, $spec = NULL, $params = NULL) {
@@ -27,7 +27,7 @@ class Utils {
 		$path .= '/' . $client->prefix;
 		
 		// Add '.../bucket'
-		if (! is_null ( $bucket ) && $bucket instanceof Riak\Bucket) {
+		if (! is_null ( $bucket ) && $bucket instanceof Bucket) {
 			$path .= '/' . urlencode ( $bucket->name );
 		}
 		
@@ -63,12 +63,12 @@ class Utils {
 	}
 	
 	/**
-	 * Given a Riak\Client, Riak\Bucket, Key, LinkSpec, and Params,
+	 * Given a Client, Bucket, Key, LinkSpec, and Params,
 	 * construct and return a URL for searching secondary indexes.
 	 * 
 	 * @author Eric Stevens <estevens@taglabsinc.com>
-	 * @param Riak\Client $client        	
-	 * @param Riak\Bucket $bucket        	
+	 * @param Client $client        	
+	 * @param Bucket $bucket        	
 	 * @param string $index
 	 *        	- Index Name & type (eg, "indexName_bin")
 	 * @param string|int $start
@@ -77,7 +77,7 @@ class Utils {
 	 *        	- Ending value for range search
 	 * @return string URL
 	 */
-	public static function buildIndexPath(Riak\Client $client, Riak\Bucket $bucket, $index, $start, $end = NULL) {
+	public static function buildIndexPath(Client $client, Bucket $bucket, $index, $start, $end = NULL) {
 		// Build 'http://hostname:port/prefix/bucket'
 		$path = array (
 				'http:/',
@@ -131,14 +131,14 @@ class Utils {
 		}
 		
 		// Capture the response headers...
-		$response_headers_io = new Riak\StringIO ();
+		$response_headers_io = new StringIO ();
 		curl_setopt ( $ch, CURLOPT_HEADERFUNCTION, array (
 				&$response_headers_io,
 				'write' 
 		) );
 		
 		// Capture the response body...
-		$response_body_io = new Riak\StringIO ();
+		$response_body_io = new StringIO ();
 		curl_setopt ( $ch, CURLOPT_WRITEFUNCTION, array (
 				&$response_body_io,
 				'write' 
@@ -151,7 +151,7 @@ class Utils {
 			curl_close ( $ch );
 			
 			// Get the headers...
-			$parsed_headers = Riak\Utils::parseHttpHeaders ( $response_headers_io->contents () );
+			$parsed_headers = Utils::parseHttpHeaders ( $response_headers_io->contents () );
 			$response_headers = array (
 					"http_code" => $http_code 
 			);
@@ -162,7 +162,7 @@ class Utils {
 			// Get the body...
 			$response_body = $response_body_io->contents ();
 			
-			// Return a new Riak\Response object.
+			// Return a new Response object.
 			return array (
 					$response_headers,
 					$response_body 

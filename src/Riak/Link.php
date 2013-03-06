@@ -3,13 +3,13 @@
 namespace Riak;
 
 /**
- * The Riak\Link object represents a link from one Riak object to
+ * The Link object represents a link from one Riak object to
  * another.
- * @package Riak\Link
+ * @package Link
  */
 class Link {
 	/**
-	 * Construct a Riak\Link object.
+	 * Construct a Link object.
 	 * 
 	 * @param string $bucket
 	 *        	- The bucket name.
@@ -26,22 +26,22 @@ class Link {
 	}
 	
 	/**
-	 * Retrieve the RiakObject to which this link points.
+	 * Retrieve the Object to which this link points.
 	 * 
 	 * @param integer $r
 	 *        	- The R-value to use.
-	 * @return Riak\Object
+	 * @return Object
 	 */
 	function get($r = NULL) {
 		return $this->client->bucket ( $this->bucket )->get ( $this->key, $r );
 	}
 	
 	/**
-	 * Retrieve the Riak\Object to which this link points, as a binary.
+	 * Retrieve the Object to which this link points, as a binary.
 	 * 
 	 * @param integer $r
 	 *        	- The R-value to use.
-	 * @return Riak\Object
+	 * @return Object
 	 */
 	function getBinary($r = NULL) {
 		return $this->client->bucket ( $this->bucket )->getBinary ( $this->key, $r );
@@ -114,7 +114,7 @@ class Link {
 	}
 	
 	/**
-	 * Convert this Riak\Link object to a link header string.
+	 * Convert this Link object to a link header string.
 	 * Used internally.
 	 */
 	function toLinkHeader($client) {
@@ -125,8 +125,8 @@ class Link {
 	/**
 	 * Return true if the links are equal.
 	 * 
-	 * @param Riak\Link $link
-	 *        	- A Riak\Link object.
+	 * @param Link $link
+	 *        	- A Link object.
 	 * @return boolean
 	 */
 	function isEqual($link) {

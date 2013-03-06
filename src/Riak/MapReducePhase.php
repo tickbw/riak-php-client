@@ -9,7 +9,7 @@ namespace Riak;
  */
 class MapReducePhase {
 	/**
-	 * Construct a Riak\MapReducePhase object.
+	 * Construct a MapReducePhase object.
 	 * 
 	 * @param string $type
 	 *        	- "map" or "reduce"

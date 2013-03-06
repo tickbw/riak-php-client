@@ -3,10 +3,10 @@
 namespace Riak;
 
 /**
- * The RiakBucket object allows you to access and change information
+ * The Bucket object allows you to access and change information
  * about a Riak bucket, and provides methods to create or retrieve
  * objects within the bucket.
- * @package RiakBucket
+ * @package Bucket
  */
 class Bucket {
 	
@@ -114,10 +114,10 @@ class Bucket {
 	 *        	- Name of the key.
 	 * @param object $data
 	 *        	- The data to store. (default NULL)
-	 * @return RiakObject
+	 * @return Object
 	 */
 	function newObject($key, $data = NULL) {
-		$obj = new Riak\Object ( $this->client, $this, $key );
+		$obj = new Object ( $this->client, $this, $key );
 		$obj->setData ( $data );
 		$obj->setContentType ( 'application/json' );
 		$obj->jsonize = TRUE;
@@ -133,10 +133,10 @@ class Bucket {
 	 *        	- The data to store.
 	 * @param string $content_type
 	 *        	- The content type of the object. (default 'application/json')
-	 * @return RiakObject
+	 * @return Object
 	 */
 	function newBinary($key, $data, $content_type = 'application/json') {
-		$obj = new Riak\Object ( $this->client, $this, $key );
+		$obj = new Object ( $this->client, $this, $key );
 		$obj->setData ( $data );
 		$obj->setContentType ( $content_type );
 		$obj->jsonize = FALSE;
@@ -150,10 +150,10 @@ class Bucket {
 	 *        	- Name of the key.
 	 * @param int $r
 	 *        	- R-Value of the request (defaults to bucket's R)
-	 * @return RiakObject
+	 * @return Object
 	 */
 	function get($key, $r = NULL) {
-		$obj = new Riak\Object ( $this->client, $this, $key );
+		$obj = new Object ( $this->client, $this, $key );
 		$obj->jsonize = TRUE;
 		$r = $this->getR ( $r );
 		return $obj->reload ( $r );
@@ -166,10 +166,10 @@ class Bucket {
 	 *        	- Name of the key.
 	 * @param int $r
 	 *        	- R-Value of the request (defaults to bucket's R)
-	 * @return RiakObject
+	 * @return Object
 	 */
 	function getBinary($key, $r = NULL) {
-		$obj = new Riak\Object ( $this->client, $this, $key );
+		$obj = new Object ( $this->client, $this, $key );
 		$obj->jsonize = FALSE;
 		$r = $this->getR ( $r );
 		return $obj->reload ( $r );
@@ -264,7 +264,7 @@ class Bucket {
 	 */
 	function setProperties($props) {
 		// Construct the URL, Headers, and Content...
-		$url = Riak\Utils::buildRestPath ( $this->client, $this );
+		$url = Utils::buildRestPath ( $this->client, $this );
 		$headers = array (
 				'Content-Type: application/json' 
 		);
@@ -273,7 +273,7 @@ class Bucket {
 		) );
 		
 		// Run the request...
-		$response = Riak\Utils::httpRequest ( 'PUT', $url, $headers, $content );
+		$response = Utils::httpRequest ( 'PUT', $url, $headers, $content );
 		
 		// Handle the response...
 		if ($response == NULL) {
@@ -298,11 +298,11 @@ class Bucket {
 				'props' => 'true',
 				'keys' => 'false' 
 		);
-		$url = Riak\Utils::buildRestPath ( $this->client, $this, NULL, NULL, $params );
-		$response = Riak\Utils::httpRequest ( 'GET', $url );
+		$url = Utils::buildRestPath ( $this->client, $this, NULL, NULL, $params );
+		$response = Utils::httpRequest ( 'GET', $url );
 		
-		// Use a RiakObject to interpret the response, we are just interested in the value.
-		$obj = new Riak\Object ( $this->client, $this, NULL );
+		// Use a Object to interpret the response, we are just interested in the value.
+		$obj = new Object ( $this->client, $this, NULL );
 		$obj->populate ( $response, array (
 				200 
 		) );
@@ -327,11 +327,11 @@ class Bucket {
 				'props' => 'false',
 				'keys' => 'true' 
 		);
-		$url = Riak\Utils::buildRestPath ( $this->client, $this, NULL, NULL, $params );
-		$response = RiakUtils::httpRequest ( 'GET', $url );
+		$url = Utils::buildRestPath ( $this->client, $this, NULL, NULL, $params );
+		$response = Utils::httpRequest ( 'GET', $url );
 		
-		// Use a RiakObject to interpret the response, we are just interested in the value.
-		$obj = new Riak\Object ( $this->client, $this, NULL );
+		// Use a Object to interpret the response, we are just interested in the value.
+		$obj = new Object ( $this->client, $this, NULL );
 		$obj->populate ( $response, array (
 				200 
 		) );
@@ -355,13 +355,13 @@ class Bucket {
 	 *        	string|int optional $end
 	 * @param
 	 *        	bool optional $dedupe - whether to eliminate duplicate entries if any
-	 * @return array of RiakLinks
+	 * @return array of Links
 	 */
 	function indexSearch($indexName, $indexType, $startOrExact, $end = NULL, $dedupe = false) {
-		$url = Riak\Utils::buildIndexPath ( $this->client, $this, "{$indexName}_{$indexType}", $startOrExact, $end );
-		$response = Riak\Utils::httpRequest ( 'GET', $url );
+		$url = Utils::buildIndexPath ( $this->client, $this, "{$indexName}_{$indexType}", $startOrExact, $end );
+		$response = Utils::httpRequest ( 'GET', $url );
 		
-		$obj = new RiakObject ( $this->client, $this, NULL );
+		$obj = new Object ( $this->client, $this, NULL );
 		$obj->populate ( $response, array (
 				200 
 		) );
@@ -380,7 +380,7 @@ class Bucket {
 				}
 				$seenKeys [$key] = true;
 			}
-			$key = new Riak\Link ( $this->name, $key );
+			$key = new Link ( $this->name, $key );
 			$key->client = $this->client;
 		}
 		return $keys;

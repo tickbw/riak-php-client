@@ -5,7 +5,7 @@ namespace Riak;
 class Client {
 	
 	/**
-	 * Construct a new Riak\Client object.
+	 * Construct a new Client object.
 	 *
 	 * @param string $host
 	 *        	- Hostname or IP address (default '127.0.0.1')
@@ -29,7 +29,7 @@ class Client {
 	}
 	
 	/**
-	 * Get the R-value setting for this Riak\Client.
+	 * Get the R-value setting for this Client.
 	 * (default 2)
 	 *
 	 * @return integer
@@ -39,11 +39,11 @@ class Client {
 	}
 	
 	/**
-	 * Set the R-value for this Riak\Client.
+	 * Set the R-value for this Client.
 	 * This value will be used
 	 * for any calls to get(...) or getBinary(...) where where 1) no
 	 * R-value is specified in the method call and 2) no R-value has
-	 * been set in the Riak\Bucket.
+	 * been set in the Bucket.
 	 *
 	 * @param integer $r
 	 *        	- The R value.
@@ -55,7 +55,7 @@ class Client {
 	}
 	
 	/**
-	 * Get the W-value setting for this Riak\Client.
+	 * Get the W-value setting for this Client.
 	 * (default 2)
 	 *
 	 * @return integer
@@ -65,7 +65,7 @@ class Client {
 	}
 	
 	/**
-	 * Set the W-value for this Riak\Client.
+	 * Set the W-value for this Client.
 	 * See setR(...) for a
 	 * description of how these values are used.
 	 *
@@ -89,7 +89,7 @@ class Client {
 	}
 	
 	/**
-	 * Set the DW-value for this Riak\Client.
+	 * Set the DW-value for this Client.
 	 * See setR(...) for a
 	 * description of how these values are used.
 	 *
@@ -103,7 +103,7 @@ class Client {
 	}
 	
 	/**
-	 * Get the clientID for this Riak\Client.
+	 * Get the clientID for this Client.
 	 *
 	 * @return string
 	 */
@@ -112,7 +112,7 @@ class Client {
 	}
 	
 	/**
-	 * Set the clientID for this Riak\Client.
+	 * Set the clientID for this Client.
 	 * Should not be called
 	 * unless you know what you are doing.
 	 *
@@ -128,22 +128,22 @@ class Client {
 	/**
 	 * Get the bucket by the specified name.
 	 * Since buckets always exist,
-	 * this will always return a Riak\Bucket.
+	 * this will always return a Bucket.
 	 *
-	 * @return Riak\Bucket
+	 * @return Bucket
 	 */
 	function bucket($name) {
-		return new Riak\Bucket ( $this, $name );
+		return new Bucket ( $this, $name );
 	}
 	
 	/**
 	 * Get all buckets.
 	 *
-	 * @return array() of Riak\Bucket objects
+	 * @return array() of Bucket objects
 	 */
 	function buckets() {
-		$url = Riak\Utils::buildRestPath ( $this );
-		$response = Riak\Utils::httpRequest ( 'GET', $url . '?buckets=true' );
+		$url = Utils::buildRestPath ( $this );
+		$response = Utils::httpRequest ( 'GET', $url . '?buckets=true' );
 		$response_obj = json_decode ( $response [1] );
 		$buckets = array ();
 		foreach ( $response_obj->buckets as $name ) {
@@ -159,7 +159,7 @@ class Client {
 	 */
 	function isAlive() {
 		$url = 'http://' . $this->host . ':' . $this->port . '/ping';
-		$response = Riak\Utils::httpRequest ( 'GET', $url );
+		$response = Utils::httpRequest ( 'GET', $url );
 		return ($response != NULL) && ($response [1] == 'OK');
 	}
 	
@@ -168,11 +168,11 @@ class Client {
 	/**
 	 * Start assembling a Map/Reduce operation.
 	 *
-	 * @see Riak\MapReduce::add()
-	 * @return Riak\MapReduce
+	 * @see MapReduce::add()
+	 * @return MapReduce
 	 */
 	function add($params) {
-		$mr = new Riak\MapReduce ( $this );
+		$mr = new MapReduce ( $this );
 		$args = func_get_args ();
 		return call_user_func_array ( array (
 				&$mr,
@@ -185,11 +185,11 @@ class Client {
 	 * This command will
 	 * return an error unless executed against a Riak Search cluster.
 	 *
-	 * @see Riak\MapReduce::search()
-	 * @return Riak\MapReduce
+	 * @see MapReduce::search()
+	 * @return MapReduce
 	 */
 	function search($params) {
-		$mr = new Riak\MapReduce ( $this );
+		$mr = new MapReduce ( $this );
 		$args = func_get_args ();
 		return call_user_func_array ( array (
 				&$mr,
@@ -200,10 +200,10 @@ class Client {
 	/**
 	 * Start assembling a Map/Reduce operation.
 	 *
-	 * @see Riak\MapReduce::link()
+	 * @see MapReduce::link()
 	 */
 	function link($params) {
-		$mr = new Riak\MapReduce ( $this );
+		$mr = new MapReduce ( $this );
 		$args = func_get_args ();
 		return call_user_func_array ( array (
 				&$mr,
@@ -214,10 +214,10 @@ class Client {
 	/**
 	 * Start assembling a Map/Reduce operation.
 	 *
-	 * @see Riak\MapReduce::map()
+	 * @see MapReduce::map()
 	 */
 	function map($params) {
-		$mr = new Riak\MapReduce ( $this );
+		$mr = new MapReduce ( $this );
 		$args = func_get_args ();
 		return call_user_func_array ( array (
 				&$mr,
@@ -228,10 +228,10 @@ class Client {
 	/**
 	 * Start assembling a Map/Reduce operation.
 	 *
-	 * @see Riak\MapReduce::reduce()
+	 * @see MapReduce::reduce()
 	 */
 	function reduce($params) {
-		$mr = new Riak\MapReduce ( $this );
+		$mr = new MapReduce ( $this );
 		$args = func_get_args ();
 		return call_user_func_array ( array (
 				&$mr,

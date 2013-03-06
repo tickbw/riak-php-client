@@ -1,1 +1,4 @@
 .project
+silex.phar
+composer.phar
+vendor/
