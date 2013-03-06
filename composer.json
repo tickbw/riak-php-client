@@ -1,5 +1,5 @@
 {
-    "name": "tick/riak-php-client",
+    "name": "tickbw/riak-php-client",
     "type": "library",
     "description": "Client Library to access Riak, distributed database",
     "keywords": ["driver","database","nosql"],
