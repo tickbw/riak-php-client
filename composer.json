@@ -1,18 +1,14 @@
 {
-    "name": "basho/riak",
+    "name": "tick/riak-php-client",
     "type": "library",
     "description": "Client Library to access Riak, distributed database",
     "keywords": ["driver","database","nosql"],
-    "homepage": "http://basho.com",
+    "homepage": "https://github.com/tickbw/riak-php-client",
     "license": "Apache 2.0",
     "authors": [
         {
-            "name": "Kota UENISHI",
-            "email": "kota@basho.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Sean Cribbs",
+            "name": "Ben Wann",
+            "email": "ben.wann@gmail.com",
             "role": "Developer"
         }
     ],
